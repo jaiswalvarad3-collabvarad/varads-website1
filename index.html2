@@ -1,0 +1,737 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anime Story World ✨</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Trebuchet MS", Arial, sans-serif;
+  color: white;
+  background: linear-gradient(135deg, #171238, #51266f, #bd568c);
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  padding: 25px 12px;
+}
+
+header h1 {
+  font-size: clamp(28px, 5vw, 45px);
+  margin: 0;
+  text-shadow: 0 0 20px #ffb7ed;
+}
+
+header p { color: #f8dafa; }
+
+.container {
+  width: min(950px, 94%);
+  margin: auto;
+  padding-bottom: 40px;
+}
+
+.panel {
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.25);
+  padding: 22px;
+  border-radius: 22px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(12px);
+}
+
+label {
+  display: block;
+  margin: 14px 0 7px;
+  font-weight: bold;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #dfb5ff;
+  background: #fff8ff;
+  color: #311642;
+  font-size: 16px;
+}
+
+textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+button {
+  padding: 12px 17px;
+  margin: 7px 5px 0 0;
+  border: 0;
+  border-radius: 12px;
+  background: #ffb3df;
+  color: #421747;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: transform .2s, background .2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  background: #fff;
+}
+
+.primary {
+  background: linear-gradient(90deg, #ff8bd1, #ffd0a6);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.anime-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.anime-choice {
+  border: 2px solid transparent;
+  background: rgba(255,255,255,.13);
+  color: white;
+  padding: 12px 5px;
+  border-radius: 15px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.anime-choice.selected {
+  border-color: #ffd4f2;
+  background: rgba(255, 153, 221, .3);
+}
+
+.anime-choice .face {
+  display: block;
+  font-size: 40px;
+  margin-bottom: 6px;
+}
+
+.stage {
+  position: relative;
+  overflow: hidden;
+  min-height: 380px;
+  border-radius: 24px;
+  background: linear-gradient(#30246f, #b858a4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px;
+}
+
+.stage::before, .stage::after {
+  content: "✦  ·  ✧     ·   ✦";
+  position: absolute;
+  color: #fff5b8;
+  font-size: 24px;
+  animation: twinkle 2s infinite alternate;
+}
+
+.stage::before { top: 20px; left: 15px; }
+.stage::after { bottom: 20px; right: 15px; }
+
+#character {
+  font-size: clamp(85px, 17vw, 145px);
+  animation: float 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 15px #ffb3ef);
+  position: relative;
+  z-index: 1;
+}
+
+#sceneTitle {
+  font-size: clamp(23px, 4vw, 34px);
+  margin: 12px 0;
+  position: relative;
+  z-index: 1;
+}
+
+#storyText {
+  max-width: 650px;
+  line-height: 1.8;
+  font-size: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+#sceneCount { color: #ffe2ff; }
+
+.progress {
+  width: 100%;
+  height: 7px;
+  background: rgba(255,255,255,.25);
+  border-radius: 20px;
+  margin-top: 15px;
+  overflow: hidden;
+}
+
+#progressBar {
+  width: 0;
+  height: 100%;
+  background: #ffd3ef;
+  transition: width .3s;
+}
+
+.small { color: #f5dff7; font-size: 13px; }
+
+input[type="range"] { accent-color: #ff9fda; }
+
+footer { text-align: center; padding: 20px; color: #f7d7ff; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-15px) rotate(3deg); }
+}
+
+@keyframes twinkle {
+  from { opacity: .4; }
+  to { opacity: 1; }
+}
+
+@media(max-width:600px) {
+  .row { grid-template-columns: 1fr; }
+  .stage { min-height: 350px; padding: 20px 14px; }
+}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>✨ Anime Story World ✨</h1>
+  <p>Your imagination, your characters, your magical story!</p>
+</header>
+
+<main class="container">
+  <section class="panel">
+    <h2>🎬 Create Your Story</h2>
+
+    <label for="topic">Story topic</label>
+    <input id="topic" value="A magical adventure" placeholder="Example: A brave girl saves a kingdom">
+
+    <label for="customStory">Optional: Write your own story</label>
+    <textarea id="customStory" placeholder="Write your story here. Leave empty to use the story generator."></textarea>
+
+    <div class="row">
+      <div>
+        <label for="language">🌐 Language</label>
+        <select id="language">
+          <option value="en">English 🇬🇧</option>
+          <option value="hi">हिंदी 🇮🇳</option>
+        </select>
+      </div>
+      <div>
+        <label for="genre">📚 Story type</label>
+        <select id="genre">
+          <option value="fantasy">Fantasy ✨</option>
+          <option value="adventure">Adventure 🗺️</option>
+          <option value="friendship">Friendship 💖</option>
+          <option value="funny">Funny 😂</option>
+          <option value="mystery">Mystery 🔍</option>
+          <option value="inspiration">Inspirational 🌟</option>
+          <option value="birthday">Birthday 🎂</option>
+          <option value="festival">Festival 🪔</option>
+        </select>
+      </div>
+    </div>
+
+    <label>🎌 Choose your anime character</label>
+    <div class="anime-options" id="animeOptions">
+      <button class="anime-choice selected" data-face="🧙‍♀️">
+        <span class="face">🧙‍♀️</span>Wizard
+      </button>
+      <button class="anime-choice" data-face="🦸">
+        <span class="face">🦸</span>Hero
+      </button>
+      <button class="anime-choice" data-face="👸">
+        <span class="face">👸</span>Princess
+      </button>
+      <button class="anime-choice" data-face="🥷">
+        <span class="face">🥷</span>Ninja
+      </button>
+      <button class="anime-choice" data-face="🧝‍♀️">
+        <span class="face">🧝‍♀️</span>Elf
+      </button>
+      <button class="anime-choice" data-face="🐱">
+        <span class="face">🐱</span>Cat
+      </button>
+    </div>
+
+    <button class="primary" id="generate">✨ Generate Story</button>
+  </section>
+
+  <section class="panel">
+    <h2>🔊 Sound & Voice Settings</h2>
+
+    <div class="row">
+      <div>
+        <label for="voice">Narration voice</label>
+        <select id="voice">
+          <option value="">Default browser voice</option>
+        </select>
+      </div>
+      <div>
+        <label for="volume">🔉 Volume</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="1">
+      </div>
+    </div>
+
+    <label>
+      <input type="checkbox" id="narration" checked style="width:auto">
+      Enable spoken narration
+    </label>
+
+    <label>
+      <input type="checkbox" id="ambience" style="width:auto">
+      Enable gentle background sound
+    </label>
+
+    <p class="small">
+      Available voices depend on your browser and installed system voices.
+      Background sound is generated in your browser.
+    </p>
+  </section>
+
+  <section class="panel">
+    <h2>🌙 Your Animated Story</h2>
+
+    <div class="stage" id="stage">
+      <div id="character">🧙‍♀️</div>
+      <h2 id="sceneTitle">Your adventure begins!</h2>
+      <p id="storyText">Choose your options and click Generate Story to begin your magical journey.</p>
+      <p id="sceneCount">Scene 0 of 4</p>
+    </div>
+
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+
+    <div style="text-align:center; margin-top:15px">
+      <button id="previous">⬅ Previous</button>
+      <button class="primary" id="play">▶ Play Story</button>
+      <button id="pause">⏸ Pause</button>
+      <button id="next">Next ➡</button>
+      <button id="stop">⏹ Stop</button>
+    </div>
+
+    <button id="download">📥 Download Story Text</button>
+  </section>
+</main>
+
+<footer>Made with 💖 and a little bit of magic ✨</footer>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let selectedFace = "🧙‍♀️";
+let scenes = [];
+let current = 0;
+let playing = false;
+let timer = null;
+let audioContext = null;
+let soundTimer = null;
+
+const translations = {
+  en: {
+    fantasy: [
+      ["The Magical Beginning", "In a land full of stars, TOPIC began as an extraordinary adventure."],
+      ["A Mysterious Discovery", "Our hero discovered a glowing crystal that held a wonderful secret."],
+      ["The Brave Choice", "With courage and kindness, the hero faced every challenge along the way."],
+      ["A Beautiful Ending", "The magic spread across the kingdom. Everyone celebrated a happy new beginning."]
+    ],
+    adventure: [
+      ["The Journey Begins", "TOPIC inspired our hero to pack a bag and explore the unknown."],
+      ["Into the Unknown", "Across mountains and rivers, the hero followed a mysterious shining path."],
+      ["The Big Challenge", "A difficult obstacle appeared, but determination helped the hero find a solution."],
+      ["Victory!", "The journey ended in triumph, with new friends and unforgettable memories."]
+    ],
+    friendship: [
+      ["A New Friend", "TOPIC brought two different hearts together in the most unexpected way."],
+      ["Little Moments", "They laughed, shared stories, and helped each other through difficult days."],
+      ["Stronger Together", "When a challenge arrived, their friendship gave them the courage to face it."],
+      ["Friends Forever", "They learned that the greatest treasure in life is a true friend."]
+    ],
+    funny: [
+      ["What a Day!", "TOPIC started with a funny surprise that nobody could have predicted."],
+      ["Oops!", "A silly mistake made everyone laugh, including our very confused hero."],
+      ["The Funniest Plan", "The hero invented a ridiculous plan, and somehow it actually worked!"],
+      ["Everybody Laughs", "Everyone laughed together. It was a day nobody would ever forget."]
+    ],
+    mystery: [
+      ["The Strange Clue", "TOPIC began when our hero discovered a mysterious note under the door."],
+      ["Following the Trail", "A trail of unusual clues led through a quiet forest and an old library."],
+      ["The Secret Revealed", "Careful thinking helped the hero discover the surprising truth."],
+      ["Case Closed", "The mystery was solved, and a new mystery was already waiting nearby."]
+    ],
+    inspiration: [
+      ["A Big Dream", "TOPIC started with a small dream and a heart full of hope."],
+      ["Keep Trying", "Even when things became difficult, our hero kept learning and moving forward."],
+      ["Believe in Yourself", "Every little step brought new confidence, strength, and understanding."],
+      ["A Bright Future", "The hero discovered that patience, effort, and kindness can make a difference."]
+    ],
+    birthday: [
+      ["A Special Day", "TOPIC began with colorful balloons, sparkling lights, and a wonderful surprise."],
+      ["Surprise Time!", "Friends arrived with cheerful smiles, thoughtful gifts, and birthday wishes."],
+      ["Cake and Happiness", "Everyone sang, shared delicious cake, and made beautiful memories together."],
+      ["Birthday Magic", "The day ended with laughter, love, and wishes for an amazing year ahead."]
+    ],
+    festival: [
+      ["The Festival Begins", "TOPIC filled the home with lights, decorations, and excitement."],
+      ["Getting Ready", "Everyone prepared delicious treats and decorated every corner with care."],
+      ["Sharing Happiness", "Family and friends came together to share joy, kindness, and traditions."],
+      ["A Festival to Remember", "The celebrations ended with warm wishes and wonderful memories."]
+    ]
+  },
+
+  hi: {
+    fantasy: [
+      ["जादुई शुरुआत", "सितारों से भरी एक दुनिया में TOPIC एक अनोखे रोमांच की शुरुआत बना।"],
+      ["रहस्यमयी खोज", "हमारे नायक को एक चमकता हुआ जादुई पत्थर मिला, जिसमें एक बड़ा रहस्य छिपा था।"],
+      ["साहस का फैसला", "हिम्मत और दयालुता से हमारे नायक ने हर मुश्किल का सामना किया।"],
+      ["खूबसूरत अंत", "पूरे राज्य में जादू फैल गया और सभी ने एक नई शुरुआत का जश्न मनाया।"]
+    ],
+    adventure: [
+      ["सफर की शुरुआत", "TOPIC ने हमारे नायक को एक अनजान दुनिया की खोज करने के लिए प्रेरित किया।"],
+      ["नई दुनिया", "पहाड़ों और नदियों को पार करते हुए नायक एक चमकते रास्ते पर आगे बढ़ा।"],
+      ["बड़ी चुनौती", "एक कठिन मुश्किल आई, लेकिन हिम्मत ने नायक को रास्ता दिखाया।"],
+      ["जीत!", "सफर का अंत जीत, नए दोस्तों और खूबसूरत यादों के साथ हुआ।"]
+    ],
+    friendship: [
+      ["नई दोस्ती", "TOPIC ने दो अलग-अलग दिलों को एक खूबसूरत रिश्ते में जोड़ दिया।"],
+      ["खुशियों के पल", "दोनों ने बातें कीं, हँसे और मुश्किल समय में एक-दूसरे का साथ दिया।"],
+      ["साथ में ताकत", "जब मुश्किल आई, तो उनकी दोस्ती ने उन्हें हिम्मत दी।"],
+      ["हमेशा के दोस्त", "उन्होंने सीखा कि सच्चा दोस्त जीवन का सबसे अनमोल खजाना है।"]
+    ],
+    funny: [
+      ["मजेदार दिन", "TOPIC की शुरुआत एक ऐसी मजेदार घटना से हुई जिसकी किसी ने कल्पना नहीं की थी।"],
+      ["अरे, ये क्या हुआ!", "एक छोटी-सी गलती से सब हँसने लगे, हमारा नायक भी!"],
+      ["सबसे मजेदार योजना", "नायक ने एक अजीब योजना बनाई और हैरानी की बात है कि वह सफल हो गई!"],
+      ["हँसी ही हँसी", "सभी ने मिलकर खूब हँसी-मजाक किया और दिन यादगार बन गया।"]
+    ],
+    mystery: [
+      ["अजीब सुराग", "TOPIC की शुरुआत दरवाजे के नीचे मिले एक रहस्यमयी पत्र से हुई।"],
+      ["सुरागों की तलाश", "अजीब सुराग एक शांत जंगल और पुरानी लाइब्रेरी तक ले गए।"],
+      ["रहस्य का खुलासा", "ध्यान से सोचने पर हमारे नायक को सच्चाई का पता चल गया।"],
+      ["रहस्य सुलझा", "पहेली सुलझ गई, लेकिन पास ही एक नया रहस्य इंतजार कर रहा था।"]
+    ],
+    inspiration: [
+      ["एक बड़ा सपना", "TOPIC की शुरुआत एक छोटे सपने और उम्मीद से भरे दिल से हुई।"],
+      ["कोशिश जारी रखो", "मुश्किलों के बावजूद हमारे नायक ने सीखना और आगे बढ़ना नहीं छोड़ा।"],
+      ["खुद पर विश्वास", "हर छोटे कदम ने नायक को नया आत्मविश्वास और ताकत दी।"],
+      ["रोशन भविष्य", "नायक ने सीखा कि मेहनत, धैर्य और दयालुता दुनिया बदल सकते हैं।"]
+    ],
+    birthday: [
+      ["खास दिन", "TOPIC की शुरुआत रंग-बिरंगे गुब्बारों, चमकती रोशनी और एक सरप्राइज से हुई।"],
+      ["सरप्राइज का समय!", "दोस्त प्यारी मुस्कान, उपहार और जन्मदिन की शुभकामनाएँ लेकर आए।"],
+      ["केक और खुशियाँ", "सबने मिलकर गाना गाया, केक खाया और खूबसूरत यादें बनाईं।"],
+      ["जन्मदिन का जादू", "दिन का अंत हँसी, प्यार और आने वाले साल की ढेर सारी शुभकामनाओं के साथ हुआ।"]
+    ],
+    festival: [
+      ["त्योहार की शुरुआत", "TOPIC ने घर को रोशनी, सजावट और खुशियों से भर दिया।"],
+      ["तैयारियों का समय", "सबने स्वादिष्ट पकवान बनाए और घर के हर कोने को सजाया।"],
+      ["खुशियाँ बाँटना", "परिवार और दोस्त एक साथ आए और प्यार व खुशियाँ बाँटीं।"],
+      ["यादगार त्योहार", "जश्न का अंत प्यारी शुभकामनाओं और खूबसूरत यादों के साथ हुआ।"]
+    ]
+  }
+};
+
+function buildScenes() {
+  const lang = $("language").value;
+  const genre = $("genre").value;
+  const topic = $("topic").value.trim() || (lang === "hi" ? "एक जादुई कहानी" : "A magical adventure");
+  const custom = $("customStory").value.trim();
+
+  if (custom) {
+    const paragraphs = custom.split(/\n+/).filter(p => p.trim());
+    const chunks = paragraphs.length > 1
+      ? paragraphs
+      : custom.match(/[^.!?।]+[.!?।]?/g).filter(p => p.trim());
+
+    const titles = lang === "hi"
+      ? ["कहानी की शुरुआत", "अगला रोमांच", "एक खास पल", "कहानी का अंत"]
+      : ["The Beginning", "The Adventure", "A Special Moment", "The Ending"];
+
+    scenes = chunks.map((text, i) => ({
+      title: titles[i % titles.length],
+      text: text.trim()
+    }));
+  } else {
+    scenes = translations[lang][genre].map(([title, text]) => ({
+      title,
+      text: text.replaceAll("TOPIC", topic)
+    }));
+  }
+
+  current = 0;
+  showScene();
+}
+
+function showScene() {
+  if (!scenes.length) return;
+  const scene = scenes[current];
+
+  $("character").textContent = selectedFace;
+  $("sceneTitle").textContent = scene.title;
+  $("storyText").textContent = scene.text;
+  $("sceneCount").textContent =
+    `${$("language").value === "hi" ? "दृश्य" : "Scene"} ${current + 1} ${$("language").value === "hi" ? "में से" : "of"} ${scenes.length}`;
+
+  $("progressBar").style.width =
+    ((current + 1) / scenes.length * 100) + "%";
+
+  $("stage").style.background =
+    current % 2 === 0
+      ? "linear-gradient(#30246f, #b858a4)"
+      : "linear-gradient(#153c68, #6f5cc2)";
+}
+
+function getVoice() {
+  const voices = speechSynthesis.getVoices();
+  const selected = $("voice").value;
+  return voices.find(v => v.name === selected) ||
+    voices.find(v => v.lang.toLowerCase().startsWith($("language").value)) ||
+    null;
+}
+
+function speakScene() {
+  if (!playing || !$("narration").checked) return;
+
+  speechSynthesis.cancel();
+
+  const utterance = new SpeechSynthesisUtterance(
+    scenes[current].title + ". " + scenes[current].text
+  );
+
+  utterance.lang = $("language").value === "hi" ? "hi-IN" : "en-US";
+  utterance.volume = Number($("volume").value);
+
+  const voice = getVoice();
+  if (voice) utterance.voice = voice;
+
+  utterance.onend = () => {
+    if (!playing) return;
+    timer = setTimeout(nextScene, 1200);
+  };
+
+  utterance.onerror = () => {
+    if (!playing) return;
+    timer = setTimeout(nextScene, 5000);
+  };
+
+  speechSynthesis.speak(utterance);
+}
+
+function playStory() {
+  if (!scenes.length) buildScenes();
+
+  clearTimeout(timer);
+  speechSynthesis.cancel();
+  playing = true;
+
+  if ($("ambience").checked) startAmbience();
+
+  if ($("narration").checked) {
+    speakScene();
+  } else {
+    timer = setTimeout(nextScene, 5000);
+  }
+}
+
+function pauseStory() {
+  playing = false;
+  clearTimeout(timer);
+  speechSynthesis.pause();
+  stopAmbience();
+}
+
+function stopStory() {
+  playing = false;
+  clearTimeout(timer);
+  speechSynthesis.cancel();
+  stopAmbience();
+}
+
+function nextScene() {
+  if (current < scenes.length - 1) {
+    current++;
+    showScene();
+    if (playing) playCurrentScene();
+  } else {
+    playing = false;
+    speechSynthesis.cancel();
+    stopAmbience();
+  }
+}
+
+function previousScene() {
+  if (current > 0) {
+    current--;
+    showScene();
+    if (playing) playCurrentScene();
+  }
+}
+
+function playCurrentScene() {
+  clearTimeout(timer);
+  speechSynthesis.cancel();
+
+  if ($("narration").checked) {
+    speakScene();
+  } else {
+    timer = setTimeout(nextScene, 5000);
+  }
+}
+
+function startAmbience() {
+  stopAmbience();
+
+  try {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    audioContext.resume();
+
+    let note = 0;
+    const notes = [261.63, 329.63, 392, 329.63];
+
+    soundTimer = setInterval(() => {
+      if (!playing || !$("ambience").checked || !audioContext) return;
+
+      const oscillator = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+
+      oscillator.type = "sine";
+      oscillator.frequency.value = notes[note % notes.length];
+
+      gain.gain.setValueAtTime(
+        0.0001 * Number($("volume").value),
+        audioContext.currentTime
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        Math.max(0.0002, 0.035 * Number($("volume").value)),
+        audioContext.currentTime + 0.15
+      );
+      gain.gain.exponentialRampToValueAtTime(
+        0.0001,
+        audioContext.currentTime + 1.1
+      );
+
+      oscillator.connect(gain);
+      gain.connect(audioContext.destination);
+      oscillator.start();
+      oscillator.stop(audioContext.currentTime + 1.15);
+      note++;
+    }, 1200);
+  } catch (error) {
+    console.log("Audio is not available in this browser.", error);
+  }
+}
+
+function stopAmbience() {
+  clearInterval(soundTimer);
+  soundTimer = null;
+
+  if (audioContext) {
+    audioContext.close().catch(() => {});
+    audioContext = null;
+  }
+}
+
+function loadVoices() {
+  const voiceSelect = $("voice");
+  const previousValue = voiceSelect.value;
+  const voices = speechSynthesis.getVoices();
+
+  voiceSelect.innerHTML = '<option value="">Automatic language voice</option>';
+
+  voices.forEach(voice => {
+    const option = document.createElement("option");
+    option.value = voice.name;
+    option.textContent = `${voice.name} (${voice.lang})`;
+    voiceSelect.appendChild(option);
+  });
+
+  if (voices.some(v => v.name === previousValue)) {
+    voiceSelect.value = previousValue;
+  }
+}
+
+document.querySelectorAll(".anime-choice").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelectorAll(".anime-choice").forEach(b =>
+      b.classList.remove("selected")
+    );
+
+    button.classList.add("selected");
+    selectedFace = button.dataset.face;
+    $("character").textContent = selectedFace;
+  });
+});
+
+$("generate").addEventListener("click", () => {
+  stopStory();
+  buildScenes();
+});
+
+$("play").addEventListener("click", playStory);
+$("pause").addEventListener("click", pauseStory);
+$("stop").addEventListener("click", stopStory);
+$("next").addEventListener("click", nextScene);
+$("previous").addEventListener("click", previousScene);
+
+$("language").addEventListener("change", () => {
+  loadVoices();
+  if (scenes.length) {
+    stopStory();
+    buildScenes();
+  }
+});
+
+$("narration").addEventListener("change", () => {
+  if (playing) playCurrentScene();
+});
+
+$("ambience").addEventListener("change", () => {
+  if (playing) {
+    if ($("ambience").checked) startAmbience();
+    else stopAmbience();
+  }
+});
+
+$("download").addEventListener("click", () => {
+  if (!scenes.length) buildScenes();
+
+  const content = scenes.map((scene, i) =>
+    `Scene ${i + 1}: ${scene.title}\n${scene.text}`
+  ).join("\n\n");
+
+  const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "my-anime-story.txt";
+  link.click();
+
+  URL.revokeObjectURL(url);
+});
+
+speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+buildScenes();
+</script>
+</body>
+</html>
